@@ -67,12 +67,12 @@ export default function Dashboard() {
 
         <div className="flex items-center gap-3">
           {/* Filter Tabs */}
-          <div className="bg-[#12121A] p-1 rounded-xl border border-[#222230] flex items-center gap-1">
+          <div className="poll-filter-tabs bg-[#12121A] p-1 rounded-xl border border-[#222230] flex items-center gap-1">
             <button
               onClick={() => setFilter('all')}
-              className={`tab-control px-3 py-1.5 rounded-lg text-xs font-medium transition-colors duration-300 ${
+              className={`poll-filter-tab tab-control px-3 py-1.5 rounded-lg text-xs font-medium transition-colors duration-300 ${
                 filter === 'all'
-                  ? 'bg-[#22222E] text-white shadow-sm'
+                  ? 'poll-filter-tab-active bg-[#22222E] text-white shadow-sm'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -80,9 +80,9 @@ export default function Dashboard() {
             </button>
             <button
               onClick={() => setFilter('live')}
-              className={`tab-control px-3 py-1.5 rounded-lg text-xs font-medium transition-colors duration-300 ${
+              className={`poll-filter-tab tab-control px-3 py-1.5 rounded-lg text-xs font-medium transition-colors duration-300 ${
                 filter === 'live'
-                  ? 'bg-[#22222E] text-white shadow-sm'
+                  ? 'poll-filter-tab-active bg-[#22222E] text-white shadow-sm'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -90,9 +90,9 @@ export default function Dashboard() {
             </button>
             <button
               onClick={() => setFilter('closed')}
-              className={`tab-control px-3 py-1.5 rounded-lg text-xs font-medium transition-colors duration-300 ${
+              className={`poll-filter-tab tab-control px-3 py-1.5 rounded-lg text-xs font-medium transition-colors duration-300 ${
                 filter === 'closed'
-                  ? 'bg-[#22222E] text-white shadow-sm'
+                  ? 'poll-filter-tab-active bg-[#22222E] text-white shadow-sm'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
