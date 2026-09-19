@@ -66,7 +66,7 @@ export default function CreatePoll() {
       <div className="mb-7">
         <h1 className="text-2xl font-bold tracking-tight text-white">Create Live Poll</h1>
         <p className="text-xs text-slate-400 mt-1">
-          Engage your team or audience in real-time with instant live results, millisecond latency, and telemetry.
+          Engage your team or audience in real-time with instant live results and millisecond latency.
         </p>
       </div>
 
@@ -76,7 +76,7 @@ export default function CreatePoll() {
       <form onSubmit={submit} className="space-y-6 pb-20">
         {/* Section 01: Question or Topic */}
         <div className="bg-[#14141C] border border-[#252536] rounded-2xl p-5 shadow-lg">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex flex-col items-start gap-2 mb-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2 font-mono text-xs font-semibold text-purple-400 uppercase tracking-wider">
               <span>01</span>
               <span>Question or Topic *</span>

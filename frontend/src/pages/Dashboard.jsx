@@ -61,7 +61,7 @@ export default function Dashboard() {
             )}
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            Manage ongoing telemetry broadcasts, inspect real-time shifts, and export historical audits.
+            Your poll, your audience, your insights.
           </p>
         </div>
 
@@ -141,7 +141,7 @@ export default function Dashboard() {
           </div>
           <h3 className="text-base font-bold text-white mb-1">No polling sessions yet</h3>
           <p className="text-xs text-slate-400 mb-5 max-w-sm mx-auto">
-            Launch your first live poll with real-time sentiment telemetry and sub-second participant sync.
+            Ask your question. Share the link. See what people think.
           </p>
           <Link
             to="/create"
