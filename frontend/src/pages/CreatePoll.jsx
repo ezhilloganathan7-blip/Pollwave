@@ -48,17 +48,13 @@ export default function CreatePoll() {
 
   return (
     <PageShell showBack>
-      {/* Top Breadcrumb & Auto-save status */}
+      {/* Top Breadcrumb */}
       <div className="flex items-center justify-between font-mono text-[11px] text-slate-400 mb-3">
         <div className="flex items-center gap-2">
           <span className="material-symbols-outlined text-[15px] text-slate-500">grid_view</span>
           <Link to="/dashboard" className="hover:text-slate-200">Polls</Link>
           <span>/</span>
           <span className="text-slate-200 font-semibold">New Poll</span>
-        </div>
-        <div className="flex items-center gap-1.5 text-emerald-400">
-          <span className="draft-status-dot w-1.5 h-1.5 rounded-full bg-emerald-400 live-dot-glow"></span>
-          <span>Draft auto-saved 14s ago</span>
         </div>
       </div>
 
