@@ -148,8 +148,12 @@ func MyPolls(c *gin.Context) {
 
 	out := make([]gin.H, 0, len(polls))
 	for _, p := range polls {
-		_, total := ReadCounts(&p)
-		out = append(out, gin.H{"poll": p, "total": total})
+		counts := make(map[string]int64, len(p.Options))
+		for _, option := range p.Options {
+			counts[option.ID] = 0
+		}
+		counts, total := rebuildFromMongo(ctx, &p, counts)
+		out = append(out, gin.H{"poll": p, "counts": counts, "total": total})
 	}
 	c.JSON(http.StatusOK, out)
 }

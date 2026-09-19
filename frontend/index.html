@@ -6,23 +6,71 @@
     <title>PollWave — Live Polling</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
-            fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui'] },
+            fontFamily: {
+              sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+              mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+            },
             colors: {
-              primary: { DEFAULT: '#059669', dark: '#047857', light: '#10B981' },
+              primary: { DEFAULT: '#7C3AED', dark: '#6D28D9', light: '#A78BFA' },
+              accent: { DEFAULT: '#10B981', dark: '#059669', light: '#34D399' },
+              surface: {
+                DEFAULT: '#0B0B0F',
+                50: '#0F0F14',
+                100: '#141419',
+                200: '#161620',
+                300: '#1C1C28',
+                400: '#22222E',
+                500: '#2A2A3A',
+                600: '#35354A',
+              },
             },
             keyframes: {
               barfill: { from: { width: '0%' }, to: {} },
-              popin: { '0%': { transform: 'scale(0.96)', opacity: 0 }, '100%': { transform: 'scale(1)', opacity: 1 } },
+              popin: {
+                '0%': { transform: 'scale(0.96)', opacity: 0 },
+                '100%': { transform: 'scale(1)', opacity: 1 },
+              },
+              fadeInUp: {
+                '0%': { opacity: 0, transform: 'translateY(16px)' },
+                '100%': { opacity: 1, transform: 'translateY(0)' },
+              },
+              tabSwap: {
+                '0%': { opacity: 0, transform: 'translateY(5px)' },
+                '100%': { opacity: 1, transform: 'translateY(0)' },
+              },
+              pageEnter: {
+                '0%': { opacity: 0, transform: 'translateY(6px)' },
+                '100%': { opacity: 1, transform: 'translateY(0)' },
+              },
+              shimmer: {
+                '0%': { backgroundPosition: '-200% 0' },
+                '100%': { backgroundPosition: '200% 0' },
+              },
+              glowPulse: {
+                '0%, 100%': { opacity: 0.3 },
+                '50%': { opacity: 0.6 },
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0px)' },
+                '50%': { transform: 'translateY(-6px)' },
+              },
             },
             animation: {
-              popin: 'popin 0.25s ease-out',
+              popin: 'popin 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+              fadeInUp: 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              tabSwap: 'tabSwap 260ms cubic-bezier(0.22, 1, 0.36, 1) both',
+              pageEnter: 'pageEnter 320ms cubic-bezier(0.22, 1, 0.36, 1) both',
+              shimmer: 'shimmer 2s ease-in-out infinite',
+              glowPulse: 'glowPulse 3s ease-in-out infinite',
+              float: 'float 3s ease-in-out infinite',
             },
           },
         },
@@ -30,11 +78,250 @@
     </script>
     <style>
       html, body, #root { height: 100%; }
-      body { background: #F8FAFC; }
-      .bar-fill { transition: width 700ms cubic-bezier(0.22, 1, 0.36, 1); }
+      html { color-scheme: dark; }
+      body {
+        background:
+          radial-gradient(circle at 88% -10%, rgba(124, 58, 237, 0.08), transparent 32rem),
+          radial-gradient(circle at 8% 110%, rgba(16, 185, 129, 0.05), transparent 28rem),
+          #0B0B0F;
+        color: #F1F5F9;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+      }
+      button, a, input, textarea { transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
+      button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible {
+        outline: 2px solid rgba(167, 139, 250, 0.9);
+        outline-offset: 3px;
+      }
+
+      /* --- Result bar animation --- */
+      .bar-fill {
+        transition: width 800ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      /* --- Gradient result bars --- */
+      .bar-gradient-emerald {
+        background: linear-gradient(90deg, #059669, #34d399);
+      }
+      .bar-gradient-violet {
+        background: linear-gradient(90deg, #7c3aed, #a78bfa);
+      }
+      .bar-gradient-sky {
+        background: linear-gradient(90deg, #0284c7, #38bdf8);
+      }
+      .bar-gradient-amber {
+        background: linear-gradient(90deg, #d97706, #fbbf24);
+      }
+      .bar-gradient-rose {
+        background: linear-gradient(90deg, #e11d48, #fb7185);
+      }
+      .bar-gradient-cyan {
+        background: linear-gradient(90deg, #0891b2, #22d3ee);
+      }
+
+      /* --- Leading bar glow --- */
+      .bar-leading {
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.3), 0 0 6px rgba(16, 185, 129, 0.2);
+      }
+
+      /* --- Noise texture overlay --- */
+      .noise-overlay::before {
+        content: '';
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0.03;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-repeat: repeat;
+        background-size: 256px 256px;
+      }
+
+      /* --- Ambient glow blobs --- */
+      .glow-blob {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(120px);
+        pointer-events: none;
+        z-index: 0;
+      }
+      .glow-purple {
+        background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, transparent 70%);
+      }
+      .glow-green {
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+      }
+
+      /* --- Dark card treatment --- */
+      .card-dark {
+        background: #161620;
+        border: 1px solid #2A2A3A;
+        border-radius: 16px;
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.02),
+          0 2px 8px rgba(0, 0, 0, 0.3),
+          0 8px 32px -4px rgba(0, 0, 0, 0.4);
+        transition: box-shadow 420ms cubic-bezier(0.22, 1, 0.36, 1), transform 420ms cubic-bezier(0.22, 1, 0.36, 1), border-color 300ms ease;
+      }
+      .card-dark:hover {
+        border-color: #35354A;
+      }
+
+      /* --- Interactive card with lift --- */
+      .card-interactive {
+        transition: box-shadow 420ms cubic-bezier(0.22, 1, 0.36, 1), transform 420ms cubic-bezier(0.22, 1, 0.36, 1), border-color 300ms ease;
+      }
+      .card-interactive:hover {
+        transform: translateY(-2px);
+        border-color: rgba(124, 58, 237, 0.3);
+        box-shadow:
+          0 0 0 1px rgba(124, 58, 237, 0.1),
+          0 4px 12px rgba(0, 0, 0, 0.3),
+          0 16px 48px -8px rgba(0, 0, 0, 0.4),
+          0 0 40px -10px rgba(124, 58, 237, 0.15);
+      }
+
+      /* --- Gradient border highlight --- */
+      .card-gradient-border {
+        position: relative;
+      }
+      .card-gradient-border::before {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: 17px;
+        background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(16, 185, 129, 0.15), rgba(42, 42, 58, 0.5));
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .card-gradient-border:hover::before {
+        opacity: 1;
+      }
+
+      /* --- Top highlight line for cards --- */
+      .card-highlight-top {
+        position: relative;
+      }
+      .card-highlight-top::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 24px;
+        right: 24px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.4), transparent);
+      }
+
+      /* --- Skeleton loader (dark) --- */
+      .skeleton {
+        background: linear-gradient(90deg, #1C1C28 25%, #22222E 50%, #1C1C28 75%);
+        background-size: 200% 100%;
+        animation: shimmer 2s ease-in-out infinite;
+        border-radius: 8px;
+      }
+
+      /* --- Dark header glass --- */
+      .header-dark {
+        background: rgba(11, 11, 15, 0.85);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        border-bottom: 1px solid rgba(42, 42, 58, 0.6);
+        box-shadow:
+          0 1px 0 rgba(255, 255, 255, 0.02),
+          0 4px 24px rgba(0, 0, 0, 0.3);
+      }
+
+      /* --- Stagger delay utility --- */
+      .delay-100 { animation-delay: 100ms; }
+      .delay-200 { animation-delay: 200ms; }
+      .delay-300 { animation-delay: 300ms; }
+      .delay-400 { animation-delay: 400ms; }
+      .delay-500 { animation-delay: 500ms; }
+
+      /* --- Purple button glow --- */
+      .btn-glow {
+        box-shadow: 0 0 0 0 rgba(124, 58, 237, 0);
+        transition: box-shadow 0.3s ease, background-color 0.2s ease, transform 0.2s ease;
+      }
+      .btn-glow:hover {
+        box-shadow: 0 0 24px rgba(124, 58, 237, 0.3), 0 4px 16px rgba(124, 58, 237, 0.2);
+      }
+      .btn-glow:active {
+        transform: scale(0.98);
+      }
+
+      /* --- Live indicator glow --- */
+      .live-dot-glow {
+        box-shadow: 0 0 8px rgba(16, 185, 129, 0.6), 0 0 20px rgba(16, 185, 129, 0.2);
+      }
+
+      /* --- Dark input focus ring --- */
+      .input-dark {
+        background: #0F0F14;
+        border: 1px solid #2A2A3A;
+        color: #E2E8F0;
+        transition: all 0.2s ease;
+      }
+      .input-dark::placeholder {
+        color: #4A4A5E;
+      }
+      .input-dark:focus {
+        border-color: #7C3AED;
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15), 0 0 12px rgba(124, 58, 237, 0.1);
+        background: #141419;
+      }
+
+      /* --- Fade-in section --- */
+      .fade-in-section {
+        opacity: 0;
+        animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      .page-content { animation: pageEnter 320ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+      .tab-content-enter { animation: tabSwap 260ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+      /* --- Gentle dialog motion --- */
+      @keyframes modalBackdropIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes modalSurfaceIn {
+        from { opacity: 0; transform: translateY(8px) scale(0.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+      .modal-backdrop { animation: modalBackdropIn 220ms ease-out both; }
+      .modal-surface { animation: modalSurfaceIn 320ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 1ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 1ms !important;
+        }
+      }
+
+      /* --- Status bar --- */
+      .status-bar {
+        background: rgba(11, 11, 15, 0.9);
+        border-top: 1px solid #2A2A3A;
+        backdrop-filter: blur(12px);
+      }
+
+      /* --- Mono label style --- */
+      .mono-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #64748B;
+      }
     </style>
   </head>
-  <body class="font-sans text-slate-900 antialiased">
+  <body class="font-sans antialiased noise-overlay">
+    <!-- Ambient glow blobs -->
+    <div class="glow-blob glow-purple" style="width:600px;height:600px;top:-100px;right:-100px;"></div>
+    <div class="glow-blob glow-green" style="width:500px;height:500px;bottom:-50px;left:-100px;"></div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

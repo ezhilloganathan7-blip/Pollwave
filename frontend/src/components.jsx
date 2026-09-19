@@ -1,48 +1,72 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { useState } from 'react'
+import { clearSession, hasValidSession } from './lib/api'
 
 export function isLoggedIn() {
-  return !!localStorage.getItem('pw_token')
+  return hasValidSession()
 }
 
 export function logout(navigate) {
-  localStorage.removeItem('pw_token')
-  localStorage.removeItem('pw_user')
+  clearSession()
   navigate('/login')
+}
+
+export function Logo({ className = 'w-7 h-7' }) {
+  return (
+    <div className={`${className} rounded-lg bg-[#161620] border border-[#2A2A3A] flex items-center justify-center overflow-hidden shrink-0 shadow-sm`}>
+      <img src="/logo.png" alt="PollWave" className="w-full h-full object-contain p-0.5" onError={(e) => {
+        // Fallback SVG if image not loaded
+        e.target.style.display = 'none'
+        e.target.nextSibling.style.display = 'block'
+      }} />
+      <svg viewBox="0 0 32 32" className="w-5 h-5 text-purple-400 hidden" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="7,20 12,12 16,18 21,9 25,15" />
+        <circle cx="7" cy="20" r="2.2" fill="currentColor" />
+        <circle cx="21" cy="9" r="2.8" fill="currentColor" />
+        <circle cx="25" cy="15" r="2.2" fill="currentColor" />
+      </svg>
+    </div>
+  )
 }
 
 export function Header() {
   const nav = useNavigate()
   const loc = useLocation()
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const loggedIn = isLoggedIn()
   const user = JSON.parse(localStorage.getItem('pw_user') || 'null')
 
   const linkClass = (path) =>
-    `px-2.5 py-1.5 rounded-lg transition-colors text-[13px] font-medium ${
+    `tab-control px-3 py-1.5 rounded-lg transition-colors duration-300 text-xs font-medium ${
       loc.pathname === path
-        ? 'bg-slate-100 text-slate-900'
-        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+        ? 'bg-[#22222E] text-white border border-[#2A2A3A]'
+        : 'text-slate-400 hover:text-slate-200 hover:bg-[#161620]'
     }`
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
-      <div className="h-14 max-w-[960px] mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-6">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-sm shrink-0">
-              <span className="material-symbols-outlined text-white text-[18px]">bar_chart</span>
-            </div>
-            <span className="text-base sm:text-lg tracking-tight text-slate-900 font-bold">PollWave</span>
-            <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-primary border border-emerald-200">
+    <>
+      <header className="header-dark sticky top-0 w-full z-50">
+        <div className="h-14 px-4 sm:px-8 flex items-center justify-between gap-4">
+        {/* Left section: Logo + Nav */}
+        <div className="flex items-center gap-5 sm:gap-6">
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <Logo className="w-7 h-7" />
+            <span className="text-base tracking-tight text-white font-bold">PollWave</span>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 uppercase tracking-wider font-mono">
               LIVE
             </span>
           </Link>
-          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200">
+
+          {/* Telemetry live chip */}
+          <div className="hidden lg:flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#161620] border border-[#2A2A3A]">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-light opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 live-dot-glow"></span>
             </span>
-            <span className="text-[11px] text-slate-500 uppercase tracking-wider font-medium">Telemetry Live</span>
+            <span className="text-[10px] text-slate-300 font-mono tracking-wider uppercase font-semibold">Telemetry Live</span>
           </div>
+
+          {/* Nav links */}
           {loggedIn && (
             <nav className="hidden md:flex items-center gap-1">
               <Link to="/dashboard" className={linkClass('/dashboard')}>My Polls</Link>
@@ -50,36 +74,78 @@ export function Header() {
             </nav>
           )}
         </div>
+
+        {/* Right section: User Profile */}
         <div className="flex items-center gap-3">
           {loggedIn ? (
-            <>
-              <span className="hidden sm:block text-xs text-slate-500">Hi, {user?.name?.split(' ')[0] || 'there'}</span>
+            <div className="flex items-center gap-3 pl-2">
+              <div className="text-right hidden sm:block">
+                <div className="text-xs font-semibold text-slate-200 leading-tight truncate max-w-[140px]">
+                  {user?.name || user?.email?.split('@')[0] || 'User'}
+                </div>
+              </div>
               <button
-                onClick={() => logout(nav)}
-                className="text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
+                onClick={() => setShowLogoutConfirm(true)}
+                title="Click to logout"
+                className="w-8 h-8 rounded-full bg-purple-300 text-purple-950 font-bold text-xs flex items-center justify-center hover:opacity-90 transition-opacity ring-2 ring-purple-500/20"
               >
-                Log out
+                <span role="img" aria-label="Profile">👤</span>
               </button>
-            </>
+            </div>
           ) : (
             <Link
               to="/login"
-              className="text-xs font-medium px-3 py-1.5 rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors"
+              className="text-xs font-semibold px-4 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white transition-all shadow-md shadow-purple-600/30 btn-glow"
             >
               Sign in
             </Link>
           )}
         </div>
-      </div>
-    </header>
+        </div>
+      </header>
+
+      {showLogoutConfirm && (
+        <div className="modal-backdrop fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="logout-dialog-title"
+            className="modal-surface w-full max-w-sm rounded-2xl border border-[#2A2A3A] bg-[#14141C] p-6 shadow-2xl shadow-black/80"
+          >
+            <h2 id="logout-dialog-title" className="text-base font-semibold text-white">
+              Log out of PollWave?
+            </h2>
+            <p className="mt-2 text-sm text-slate-400">
+              You will need to sign in again to manage your polls.
+            </p>
+            <div className="mt-6 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setShowLogoutConfirm(false)}
+                className="rounded-lg border border-[#2A2A3A] px-4 py-2 text-xs font-semibold text-slate-300 transition-colors hover:bg-[#22222E] hover:text-white"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => logout(nav)}
+                className="rounded-lg bg-purple-300 px-4 py-2 text-xs font-bold text-purple-950 transition-colors hover:bg-purple-200"
+              >
+                Log out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 
 export function PageShell({ children, narrow = false }) {
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#0B0B0F] text-slate-200 flex flex-col relative overflow-x-hidden">
       <Header />
-      <main className={`pt-20 pb-16 px-4 sm:px-6 mx-auto ${narrow ? 'max-w-[520px]' : 'max-w-[960px]'}`}>
+      <main className={`page-content flex-1 py-8 px-4 sm:px-6 md:px-8 mx-auto w-full relative z-10 ${narrow ? 'max-w-[560px]' : 'max-w-[1100px]'}`}>
         {children}
       </main>
     </div>
@@ -89,17 +155,31 @@ export function PageShell({ children, narrow = false }) {
 export function ErrorBanner({ message }) {
   if (!message) return null
   return (
-    <div className="mb-4 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm flex items-center gap-2">
-      <span className="material-symbols-outlined text-[18px]">error</span>
-      {message}
+    <div className="mb-5 px-4 py-3 rounded-xl bg-red-950/40 border border-red-800/60 text-red-300 text-xs flex items-center gap-2.5 shadow-sm backdrop-blur-sm animate-fadeInUp">
+      <div className="w-5 h-5 rounded-full bg-red-900/60 border border-red-700/50 flex items-center justify-center shrink-0">
+        <span className="material-symbols-outlined text-[13px] text-red-400">error</span>
+      </div>
+      <span>{message}</span>
     </div>
   )
 }
 
 export function Spinner() {
   return (
-    <div className="flex items-center justify-center py-20">
-      <div className="w-8 h-8 border-[3px] border-slate-200 border-t-primary rounded-full animate-spin"></div>
+    <div className="flex flex-col items-center justify-center py-20 gap-5 fade-in-section">
+      <div className="w-full max-w-md space-y-4">
+        <div className="skeleton h-6 w-3/4 mx-auto"></div>
+        <div className="skeleton h-4 w-1/2 mx-auto"></div>
+        <div className="space-y-3 mt-6">
+          <div className="skeleton h-14 w-full"></div>
+          <div className="skeleton h-14 w-full"></div>
+          <div className="skeleton h-14 w-5/6"></div>
+        </div>
+      </div>
+      <div className="flex items-center gap-2 mt-2">
+        <div className="w-4 h-4 border-2 border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></div>
+        <span className="text-xs text-slate-400 font-mono">Syncing cluster stream…</span>
+      </div>
     </div>
   )
 }

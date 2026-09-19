@@ -130,28 +130,23 @@ func ReadCounts(poll *models.Poll) (map[string]int64, int64) {
 }
 
 func rebuildFromMongo(ctx context.Context, poll *models.Poll, counts map[string]int64) (map[string]int64, int64) {
-	cur, err := db.Votes.Aggregate(ctx, mongo.Pipeline{
-		{{Key: "$match", Value: bson.M{"pollId": poll.ID}}},
-		{{Key: "$group", Value: bson.M{"_id": "$optionId", "n": bson.M{"$sum": 1}}}},
-	})
+	cur, err := db.Votes.Find(ctx, bson.M{"pollId": poll.ID})
 	if err != nil {
 		return counts, 0
 	}
+	defer cur.Close(ctx)
 
-	var rows []struct {
-		ID string `bson:"_id"`
-		N  int64  `bson:"n"`
-	}
-	if err := cur.All(ctx, &rows); err != nil {
+	var votes []models.Vote
+	if err := cur.All(ctx, &votes); err != nil {
 		return counts, 0
 	}
 
 	var total int64
 	pairs := make([]interface{}, 0, len(counts)*2)
-	for _, r := range rows {
-		if _, ok := counts[r.ID]; ok {
-			counts[r.ID] = r.N
-			total += r.N
+	for _, vote := range votes {
+		if _, ok := counts[vote.OptionID]; ok {
+			counts[vote.OptionID]++
+			total++
 		}
 	}
 	for id, n := range counts {
