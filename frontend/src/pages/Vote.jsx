@@ -72,7 +72,7 @@ export default function Vote() {
           </h1>
 
           {poll.closed && (
-            <div className="mt-4 rounded-xl border border-red-800/60 bg-red-950/30 px-4 py-3 text-sm font-semibold text-red-300">
+            <div className="closed-poll-banner mt-4 rounded-xl border border-red-800/60 bg-red-950/30 px-4 py-3 text-sm font-semibold text-red-300">
               Poll is closed. Voting is no longer available.
             </div>
           )}
