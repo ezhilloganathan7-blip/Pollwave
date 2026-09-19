@@ -47,7 +47,7 @@ export default function CreatePoll() {
   const charCount = question.length
 
   return (
-    <PageShell>
+    <PageShell showBack>
       {/* Top Breadcrumb & Auto-save status */}
       <div className="flex items-center justify-between font-mono text-[11px] text-slate-400 mb-3">
         <div className="flex items-center gap-2">

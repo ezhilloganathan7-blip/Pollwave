@@ -173,11 +173,34 @@ export function Header() {
   )
 }
 
-export function PageShell({ children, narrow = false }) {
+export function PageShell({ children, narrow = false, showBack = false }) {
+  const nav = useNavigate()
+
+  function goBack() {
+    if (window.history.length > 1) {
+      nav(-1)
+    } else {
+      nav('/')
+    }
+  }
+
   return (
     <div className="page-shell min-h-screen bg-[#0B0B0F] text-slate-200 flex flex-col relative overflow-x-hidden">
       <Header />
       <main className={`page-content flex-1 py-8 px-4 sm:px-6 md:px-8 mx-auto w-full relative z-10 ${narrow ? 'max-w-[560px]' : 'max-w-[1100px]'}`}>
+        {showBack && (
+          <div className="flex justify-start -mt-4 mb-5">
+            <button
+              type="button"
+              onClick={goBack}
+              aria-label="Go back"
+              className="back-button inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-colors"
+            >
+              <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+              <span>Back</span>
+            </button>
+          </div>
+        )}
         {children}
       </main>
     </div>
