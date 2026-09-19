@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { api } from '../lib/api'
-import { PageShell, ErrorBanner, Spinner } from '../components'
+import { PageShell, ErrorBanner, PollSkeleton } from '../components'
 
 export default function Dashboard() {
   const [items, setItems] = useState(null)
@@ -127,7 +127,11 @@ export default function Dashboard() {
 
       <ErrorBanner message={error} />
 
-      {items === null && !error && <Spinner />}
+      {items === null && !error && (
+        <div className="grid md:grid-cols-2 gap-5" aria-label="Loading polls">
+          {Array.from({ length: 4 }, (_, index) => <PollSkeleton key={index} />)}
+        </div>
+      )}
 
       {/* Empty State */}
       {items && items.length === 0 && (

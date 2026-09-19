@@ -183,3 +183,23 @@ export function Spinner() {
     </div>
   )
 }
+
+export function PollSkeleton() {
+  return (
+    <div className="bg-[#14141C] border border-[#252536] rounded-2xl p-5 shadow-lg animate-pulse" aria-hidden="true">
+      <div className="flex items-center justify-between mb-5">
+        <div className="skeleton h-5 w-20 rounded-full"></div>
+        <div className="skeleton h-3 w-24 rounded"></div>
+      </div>
+      <div className="space-y-2 mb-4">
+        <div className="skeleton h-5 w-full rounded"></div>
+        <div className="skeleton h-5 w-3/4 rounded"></div>
+      </div>
+      <div className="skeleton h-16 w-full rounded-xl mb-5"></div>
+      <div className="flex items-center justify-between">
+        <div className="skeleton h-4 w-24 rounded"></div>
+        <div className="skeleton h-8 w-20 rounded-lg"></div>
+      </div>
+    </div>
+  )
+}
