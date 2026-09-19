@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PollWave — Live Polling</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui'] },
+            colors: {
+              primary: { DEFAULT: '#059669', dark: '#047857', light: '#10B981' },
+            },
+            keyframes: {
+              barfill: { from: { width: '0%' }, to: {} },
+              popin: { '0%': { transform: 'scale(0.96)', opacity: 0 }, '100%': { transform: 'scale(1)', opacity: 1 } },
+            },
+            animation: {
+              popin: 'popin 0.25s ease-out',
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+      html, body, #root { height: 100%; }
+      body { background: #F8FAFC; }
+      .bar-fill { transition: width 700ms cubic-bezier(0.22, 1, 0.36, 1); }
+    </style>
+  </head>
+  <body class="font-sans text-slate-900 antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
