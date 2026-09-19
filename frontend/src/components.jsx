@@ -1,6 +1,37 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { clearSession, hasValidSession } from './lib/api'
+
+const ThemeContext = createContext(null)
+
+export function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState(() => localStorage.getItem('pw_theme') || 'dark')
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('light-theme', theme === 'light')
+    document.documentElement.style.colorScheme = theme
+    localStorage.setItem('pw_theme', theme)
+  }, [theme])
+
+  return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>
+}
+
+export function ThemeToggle() {
+  const { theme, setTheme } = useContext(ThemeContext)
+  const isLight = theme === 'light'
+
+  return (
+    <button
+      type="button"
+      onClick={() => setTheme(isLight ? 'dark' : 'light')}
+      title={isLight ? 'Switch to dark theme' : 'Switch to light theme'}
+      aria-label={isLight ? 'Switch to dark theme' : 'Switch to light theme'}
+      className="theme-toggle w-9 h-9 rounded-xl border border-[#2A2A3A] bg-[#161620] text-slate-300 hover:text-white hover:border-purple-400 flex items-center justify-center transition-colors"
+    >
+      <span className="material-symbols-outlined text-[18px]">{isLight ? 'dark_mode' : 'light_mode'}</span>
+    </button>
+  )
+}
 
 export function isLoggedIn() {
   return hasValidSession()
@@ -58,12 +89,12 @@ export function Header() {
           </Link>
 
           {/* Telemetry live chip */}
-          <div className="hidden lg:flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#161620] border border-[#2A2A3A]">
+          <div className="live-status-chip hidden lg:flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#161620] border border-[#2A2A3A]">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 live-dot-glow"></span>
+              <span className="live-status-ping animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="live-status-dot relative inline-flex rounded-full h-2 w-2 bg-emerald-400 live-dot-glow"></span>
             </span>
-            <span className="text-[10px] text-slate-300 font-mono tracking-wider uppercase font-semibold">Live</span>
+            <span className="live-status-label text-[10px] text-slate-300 font-mono tracking-wider uppercase font-semibold">Live</span>
           </div>
 
           {/* Nav links */}
@@ -77,6 +108,7 @@ export function Header() {
 
         {/* Right section: User Profile */}
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           {loggedIn ? (
             <div className="flex items-center gap-3 pl-2">
               <div className="text-right hidden sm:block">
@@ -89,7 +121,7 @@ export function Header() {
                 title="Click to logout"
                 className="w-8 h-8 rounded-full bg-purple-300 text-purple-950 font-bold text-xs flex items-center justify-center hover:opacity-90 transition-opacity ring-2 ring-purple-500/20"
               >
-                <span role="img" aria-label="Profile">👤</span>
+                <span className="profile-icon" role="img" aria-label="Profile">👤</span>
               </button>
             </div>
           ) : (
@@ -129,7 +161,7 @@ export function Header() {
               <button
                 type="button"
                 onClick={() => logout(nav)}
-                className="rounded-lg bg-purple-300 px-4 py-2 text-xs font-bold text-purple-950 transition-colors hover:bg-purple-200"
+                className="logout-action rounded-lg bg-purple-300 px-4 py-2 text-xs font-bold text-purple-950 transition-colors hover:bg-purple-200"
               >
                 Log out
               </button>
@@ -143,7 +175,7 @@ export function Header() {
 
 export function PageShell({ children, narrow = false }) {
   return (
-    <div className="min-h-screen bg-[#0B0B0F] text-slate-200 flex flex-col relative overflow-x-hidden">
+    <div className="page-shell min-h-screen bg-[#0B0B0F] text-slate-200 flex flex-col relative overflow-x-hidden">
       <Header />
       <main className={`page-content flex-1 py-8 px-4 sm:px-6 md:px-8 mx-auto w-full relative z-10 ${narrow ? 'max-w-[560px]' : 'max-w-[1100px]'}`}>
         {children}
@@ -155,8 +187,8 @@ export function PageShell({ children, narrow = false }) {
 export function ErrorBanner({ message }) {
   if (!message) return null
   return (
-    <div className="mb-5 px-4 py-3 rounded-xl bg-red-950/40 border border-red-800/60 text-red-300 text-xs flex items-center gap-2.5 shadow-sm backdrop-blur-sm animate-fadeInUp">
-      <div className="w-5 h-5 rounded-full bg-red-900/60 border border-red-700/50 flex items-center justify-center shrink-0">
+    <div className="error-banner mb-5 px-4 py-3 rounded-xl bg-red-950/40 border border-red-800/60 text-red-300 text-xs flex items-center gap-2.5 shadow-sm backdrop-blur-sm animate-fadeInUp">
+      <div className="error-banner-icon w-5 h-5 rounded-full bg-red-900/60 border border-red-700/50 flex items-center justify-center shrink-0">
         <span className="material-symbols-outlined text-[13px] text-red-400">error</span>
       </div>
       <span>{message}</span>

@@ -75,10 +75,10 @@ export default function Results() {
     <PageShell>
       {/* Top Status & Actions Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 font-mono text-xs">
-        <div className="flex items-center gap-3 bg-[#12121A] border border-[#222230] px-4 py-2 rounded-xl shadow-md">
+        <div className="results-live-status flex items-center gap-3 bg-[#12121A] border border-[#222230] px-4 py-2 rounded-xl shadow-md">
           <div className="flex items-center gap-2">
-            <span className={`w-2 h-2 rounded-full ${connected && !poll.closed ? 'bg-emerald-400 live-dot-glow' : 'bg-slate-500'}`}></span>
-            <span className="text-white font-bold">{poll.closed ? 'POLL CLOSED' : 'LIVE NOW'}</span>
+            <span className={`results-live-dot w-2 h-2 rounded-full ${connected && !poll.closed ? 'bg-emerald-400 live-dot-glow' : 'bg-slate-500'}`}></span>
+            <span className="results-live-label text-white font-bold">{poll.closed ? 'POLL CLOSED' : 'LIVE NOW'}</span>
           </div>
           <span className="text-slate-600">·</span>
           <div className="flex items-center gap-1.5 text-slate-300">
@@ -92,7 +92,7 @@ export default function Results() {
           <div className="flex items-center gap-2 self-end sm:self-auto">
             <button
               onClick={handleClose}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-950/40 hover:bg-red-900/60 border border-red-800/60 text-red-300 font-mono text-xs transition-colors"
+              className="end-session-action flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-950/40 hover:bg-red-900/60 border border-red-800/60 text-red-300 font-mono text-xs transition-colors"
             >
               <span className="material-symbols-outlined text-[15px]">stop_circle</span>
               <span>End Session</span>
@@ -123,7 +123,7 @@ export default function Results() {
                   <div className="flex items-center gap-2.5">
                     <span className="font-semibold text-white text-sm">{opt.text}</span>
                     {isLeading && (
-                      <span className="px-1.5 py-0.5 rounded bg-purple-950/80 border border-purple-800 font-mono text-[9px] font-bold text-purple-300 tracking-wider">
+                      <span className="leader-badge px-1.5 py-0.5 rounded bg-purple-950/80 border border-purple-800 font-mono text-[9px] font-bold text-purple-300 tracking-wider">
                         LEADER
                       </span>
                     )}

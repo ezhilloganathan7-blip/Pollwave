@@ -55,7 +55,7 @@ export default function Dashboard() {
             <h1 className="text-2xl font-bold tracking-tight text-white">My Polls</h1>
             {items !== null && (
               <span className="px-2.5 py-0.5 rounded-full bg-[#181824] border border-[#2A2A3A] font-mono text-[11px] text-emerald-400 font-semibold flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 live-dot-glow"></span>
+                <span className="dashboard-live-dot w-1.5 h-1.5 rounded-full bg-emerald-400 live-dot-glow"></span>
                 {activeCount} Active · {totalCount} Total
               </span>
             )}
@@ -175,7 +175,7 @@ export default function Dashboard() {
                   <div className="flex items-center justify-between mb-3">
                     {isLive ? (
                       <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 font-mono text-[10px] text-emerald-400 font-semibold tracking-wider uppercase">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 live-dot-glow"></span>
+                        <span className="dashboard-live-dot w-1.5 h-1.5 rounded-full bg-emerald-400 live-dot-glow"></span>
                         LIVE NOW
                       </span>
                     ) : (
@@ -212,14 +212,14 @@ export default function Dashboard() {
                     {/* Avatars & vote count */}
                     <div className="flex items-center gap-2">
                       <div className="flex -space-x-1.5 overflow-hidden">
-                        <div className="inline-block h-6 w-6 rounded-full ring-2 ring-[#14141C] bg-purple-900/80 text-purple-200 text-[10px] font-mono font-bold flex items-center justify-center">
+                        <div className="voter-avatar voter-avatar-jd inline-block h-6 w-6 rounded-full ring-2 ring-[#14141C] bg-emerald-900/80 text-emerald-200 text-[10px] font-mono font-bold flex items-center justify-center">
                           JD
                         </div>
-                        <div className="inline-block h-6 w-6 rounded-full ring-2 ring-[#14141C] bg-emerald-900/80 text-emerald-200 text-[10px] font-mono font-bold flex items-center justify-center">
+                        <div className="voter-avatar voter-avatar-mk inline-block h-6 w-6 rounded-full ring-2 ring-[#14141C] bg-emerald-900/80 text-emerald-200 text-[10px] font-mono font-bold flex items-center justify-center">
                           MK
                         </div>
                         {total > 2 && (
-                          <div className="inline-block h-6 w-6 rounded-full ring-2 ring-[#14141C] bg-[#222230] text-slate-300 text-[9px] font-mono font-semibold flex items-center justify-center">
+                          <div className="voter-avatar voter-avatar-more inline-block h-6 w-6 rounded-full ring-2 ring-[#14141C] bg-[#222230] text-slate-300 text-[9px] font-mono font-semibold flex items-center justify-center">
                             +{total - 2}
                           </div>
                         )}

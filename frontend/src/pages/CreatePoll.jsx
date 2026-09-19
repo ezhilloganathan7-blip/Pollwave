@@ -57,7 +57,7 @@ export default function CreatePoll() {
           <span className="text-slate-200 font-semibold">New Poll</span>
         </div>
         <div className="flex items-center gap-1.5 text-emerald-400">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 live-dot-glow"></span>
+          <span className="draft-status-dot w-1.5 h-1.5 rounded-full bg-emerald-400 live-dot-glow"></span>
           <span>Draft auto-saved 14s ago</span>
         </div>
       </div>
@@ -165,33 +165,21 @@ export default function CreatePoll() {
         </div>
 
         {/* Floating Bottom Quick Launch Bar matching reference */}
-        <div className="sticky bottom-4 z-40 p-3 rounded-2xl bg-[#14141CEE] backdrop-blur-xl border border-[#2E2E42] shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2 font-mono text-[11px] text-slate-400">
-            <span className="material-symbols-outlined text-[16px] text-slate-400">keyboard</span>
-            <span>Quick Launch:</span>
-            <kbd className="px-1.5 py-0.5 rounded bg-[#1D1D2B] border border-[#2E2E40] text-slate-300 text-[10px]">
-              ⌘ + Enter
-            </kbd>
-            <span className="text-slate-600 hidden md:inline">|</span>
-            <span className="text-slate-500 hidden md:inline">Draft saved locally</span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition-all shadow-lg shadow-purple-600/30 btn-glow active:scale-[0.99] disabled:opacity-50"
-            >
-              {loading ? (
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              ) : (
-                <>
-                  <span className="text-amber-300">⚡</span>
-                  <span>Launch Live Poll</span>
-                </>
-              )}
-            </button>
-          </div>
+        <div className="quick-launch-bar sticky bottom-4 z-40 p-3 rounded-2xl bg-[#14141CEE] backdrop-blur-xl border border-[#2E2E42] shadow-2xl flex items-center justify-center">
+          <button
+            type="submit"
+            disabled={loading}
+            className="quick-launch-action min-w-[190px] justify-center flex items-center gap-1.5 px-8 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold transition-all shadow-lg shadow-purple-600/30 btn-glow active:scale-[0.99] disabled:opacity-50"
+          >
+            {loading ? (
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <>
+                <span className="quick-launch-icon text-amber-300">⚡</span>
+                <span>Launch Poll</span>
+              </>
+            )}
+          </button>
         </div>
       </form>
     </PageShell>

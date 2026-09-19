@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api, saveSession } from '../lib/api'
-import { ErrorBanner } from '../components'
+import { ErrorBanner, ThemeToggle } from '../components'
 
 export default function Auth() {
   const [mode, setMode] = useState('signin')
@@ -32,6 +32,9 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen bg-[#0B0B0F] text-slate-200 flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      <div className="absolute top-4 right-4 z-20">
+        <ThemeToggle />
+      </div>
       {/* Background glow blobs */}
       <div className="glow-blob glow-purple" style={{ width: '600px', height: '600px', top: '-15%', right: '-10%', position: 'absolute' }}></div>
       <div className="glow-blob glow-green" style={{ width: '500px', height: '500px', bottom: '-15%', left: '-10%', position: 'absolute' }}></div>

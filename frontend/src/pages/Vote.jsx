@@ -63,7 +63,7 @@ export default function Vote() {
       <div className="bg-[#14141C] border border-[#252536] rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
         {/* Top Tag & Meta info */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/60 border border-purple-800/60 font-mono text-[10px] text-purple-300 font-semibold uppercase tracking-wider mb-3">
+          <div className="vote-mode-badge inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/60 border border-purple-800/60 font-mono text-[10px] text-purple-300 font-semibold uppercase tracking-wider mb-3">
             <span>Single Choice</span>
           </div>
 
@@ -90,15 +90,15 @@ export default function Vote() {
               <div
                 key={opt.id}
                 onClick={() => !poll.closed && !voted && setSelectedOption(opt.id)}
-                className={`w-full text-left p-4 rounded-xl border transition-all duration-200 cursor-pointer flex items-center justify-between gap-3 ${
+                className={`vote-option w-full text-left p-4 rounded-xl border transition-all duration-200 cursor-pointer flex items-center justify-between gap-3 ${
                   isSelected
-                    ? 'bg-purple-950/30 border-purple-500 shadow-lg shadow-purple-600/10 ring-1 ring-purple-500/50'
+                    ? 'is-selected bg-purple-950/30 border-purple-500 shadow-lg shadow-purple-600/10 ring-1 ring-purple-500/50'
                     : 'bg-[#0F0F17] border-[#242436] hover:border-[#3A3A52] hover:bg-[#12121D]'
                 } ${poll.closed ? 'opacity-60 cursor-not-allowed' : ''}`}
               >
                 <div className="flex items-center gap-3.5">
                   <span
-                    className={`w-8 h-8 rounded-lg font-mono text-xs font-bold flex items-center justify-center shrink-0 transition-colors ${
+                    className={`vote-option-letter w-8 h-8 rounded-lg font-mono text-xs font-bold flex items-center justify-center shrink-0 transition-colors ${
                       isSelected
                         ? 'bg-purple-600 text-white shadow-sm'
                         : 'bg-[#1C1C28] text-slate-400 border border-[#2B2B3E]'
@@ -114,7 +114,7 @@ export default function Vote() {
                 {/* Radio selection circle */}
                 <div className="shrink-0 pl-2">
                   <div
-                    className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
+                    className={`vote-option-radio w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
                       isSelected
                         ? 'border-purple-500 bg-purple-600'
                         : 'border-[#3A3A50] bg-[#14141E]'
@@ -161,11 +161,7 @@ export default function Vote() {
       <div className="mt-6 text-center font-mono text-[10px] text-slate-500 flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
         <span>Powered by PollWave</span>
         <span>·</span>
-        <span>Real-time sentiment engine</span>
-        <span className="hidden sm:inline">·</span>
         <span className="text-emerald-500/80">TLS 1.3 Encrypted</span>
-        <span className="hidden sm:inline">·</span>
-        <span className="text-slate-400">WebSocket Live</span>
       </div>
     </PageShell>
   )
