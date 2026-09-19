@@ -54,14 +54,14 @@ export default function Results() {
 
   if (error && !poll) {
     return (
-      <PageShell>
+      <PageShell showBack>
         <ErrorBanner message={error} />
       </PageShell>
     )
   }
   if (!poll || !results) {
     return (
-      <PageShell>
+      <PageShell showBack>
         <Spinner />
       </PageShell>
     )
@@ -72,7 +72,7 @@ export default function Results() {
   const voteUrl = `${window.location.origin}/vote/${slug}`
 
   return (
-    <PageShell>
+    <PageShell showBack>
       {/* Top Status & Actions Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 font-mono text-xs">
         <div className="results-live-status flex items-center gap-3 bg-[#12121A] border border-[#222230] px-4 py-2 rounded-xl shadow-md">
